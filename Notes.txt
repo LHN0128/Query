@@ -1,0 +1,8 @@
+1、workGenerator中，sql=qText.getQueryString(qid, paraid)是真正的sql语句，qText.getSnapString(qid)是根据这个查询语句来查询pg_stat_statements的
+2、QueryText中的Para参数数组长度都是30，workGenerator中线程任务一个循环就是把这30个参数过一遍
+3、为什么paraID的数组每三个都是相同的？发现qid1-3都是一个模板，其中两个加了pg_hint
+4、TwoActiveQueryGenerator类中的qTemp数组中就是存放的查询模板id,通过创建线程的时候就给了线程任务，也就是后面的qid，然后qTemp通过TwoActiveQueryGenerator中的循环分别组合
+    比如,qTemp[0]和qTemp[1],qTemp[0]和qTemp[2]。。。。。这样组合下去。数组中的值就是qid！因此修改使用的查询组合的查询模板，就通过修改qTemp数组即可！
+    TwoActiveQueryGenerator类中的循环就是把所有的查询组合一遍
+5、之前查视图出不来数据和DBid有关
+6、paraQ[][]数组中的 元素并没有全部用做查询，work中的30次只是一个完全一样的查询运行了30次
